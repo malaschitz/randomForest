@@ -10,3 +10,19 @@
 
 # Output of the go coverage tool, specifically when used with LiteIDE
 *.out
+
+\.idea/markdown-navigator\.xml
+
+\.idea/markdown-navigator/profiles_settings\.xml
+
+\.idea/misc\.xml
+
+\.idea/modules\.xml
+
+\.idea/randomForest\.iml
+
+\.idea/vcs\.xml
+
+\.idea/watcherTasks\.xml
+
+\.idea/workspace\.xml

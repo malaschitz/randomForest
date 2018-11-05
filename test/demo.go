@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"math/rand"
+	"time"
 
 	"github.com/malaschitz/randomForest"
 )
@@ -10,25 +11,33 @@ import (
 func main() {
 	rand.Seed(1)
 	forest := randomForest.Forest{}
-	data, res := createDataset(2000, 12)
+	data, res := createDataset(10000, 6)
 	forestData := randomForest.ForestData{X: data, Results: res}
 	forest.Data = forestData
-	forest.MAttrs = 12
+	t := time.Now()
 	forest.Train(999)
-
+	fmt.Println("train", time.Since(t))
 	//test
 	s := 0
-	n := 1000
+	sw := 0
+	n := 10000
+	t = time.Now()
+	rand.Seed(2)
+	datat, rest := createDataset(n, 6)
 	for i := 0; i < n; i++ {
-		datat, rest := createDataset(n, 12)
-		voteT, voteF := forest.Vote(datat[i])
-		if (voteT > voteF && rest[i]) || (voteT < voteF && !rest[i]) {
+		vote := forest.Vote(datat[i])
+		if (vote > 0.5 && rest[i]) || (vote < 0.5 && !rest[i]) {
 			s++
-		} else {
-			//fmt.Println(i, rest[i], voteT, voteF)
+		}
+		//
+		wvote := forest.WeightVote(datat[i])
+		if (wvote > 0.5 && rest[i]) || (wvote < 0.5 && !rest[i]) {
+			sw++
 		}
 	}
-	fmt.Printf("Correct: %5.2f %%\n", float64(s)*100/float64(n))
+	fmt.Println("try", n, "times", time.Since(t))
+	fmt.Printf("Correct:        %5.2f %%\n", float64(s)*100/float64(n))
+	fmt.Printf("Weight Correct: %5.2f %%\n", float64(sw)*100/float64(n))
 	forest.PrintFeatureImportance()
 }
 
@@ -57,6 +66,7 @@ func classit(a []float64) bool {
 			s = s - k*a[i]
 		}
 	}
-	s = s + 10*(rand.Float64()-.5)
+
+	s = s + 0*(rand.Float64()-.5)
 	return s > 0
 }

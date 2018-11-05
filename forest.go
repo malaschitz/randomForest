@@ -6,6 +6,8 @@ import (
 	"math/rand"
 	"sort"
 	"sync"
+
+	"gonum.org/v1/gonum/stat"
 )
 
 var mux = &sync.Mutex{}
@@ -47,16 +49,22 @@ func (forest *Forest) Train(trees int) {
 	forest.FeatureImportance = imp
 }
 
-func (forest *Forest) Vote(x []float64) (voteTrue, voteFalse int) {
+func (forest *Forest) Vote(x []float64) float64 {
+	votes := 0.0
 	for i := 0; i < forest.NTrees; i++ {
-		vote := forest.Trees[i].vote(x)
-		if vote {
-			voteTrue++
-		} else {
-			voteFalse++
-		}
+		votes += forest.Trees[i].vote(x)
 	}
-	return
+	return votes / float64(forest.NTrees)
+}
+
+func (forest *Forest) WeightVote(x []float64) float64 {
+	votes := 0.0
+	total := 0.0
+	for i := 0; i < forest.NTrees; i++ {
+		votes += forest.Trees[i].vote(x) * forest.Trees[i].Validation
+		total += forest.Trees[i].Validation
+	}
+	return votes / total
 }
 
 // Calculate a new tree in forest.
@@ -72,12 +80,22 @@ func (forest *Forest) newTree(index int, wg *sync.WaitGroup) {
 		results[i] = forest.Data.Results[k]
 		used[k] = true
 	}
-	//build Root
+	// build Root
 	root := Branch{}
 	root.build(forest, x, results, 1)
-	//build tree
 	tree := Tree{Root: root}
-	//add tree
+	// validation test tree
+	count := 0
+	right := 0.0
+	for i := 0; i < forest.NSize; i++ {
+		if !used[i] {
+			count++
+			right += root.vote(forest.Data.X[i])
+		}
+	}
+	tree.Validation = right / float64(count)
+
+	// add tree
 	mux.Lock()
 	forest.Trees[index] = tree
 	mux.Unlock()
@@ -88,6 +106,24 @@ func (forest *Forest) PrintFeatureImportance() {
 	for i := 0; i < forest.NAttrs; i++ {
 		fmt.Println(i, forest.FeatureImportance[i])
 	}
+	fmt.Println("-------- cross validation")
+	xs := make([]float64, 0)
+	for _, tree := range forest.Trees {
+		xs = append(xs, tree.Validation)
+	}
+	sort.Float64s(xs)
+	mean := stat.Mean(xs, nil)
+	median := stat.Quantile(0.5, stat.Empirical, xs, nil)
+	variance := stat.Variance(xs, nil)
+	stddev := math.Sqrt(variance)
+
+	fmt.Printf("mean=       %v\n", mean)
+	fmt.Printf("median=     %v\n", median)
+	fmt.Printf("variance=   %v\n", variance)
+	fmt.Printf("std-dev=    %v\n", stddev)
+	fmt.Printf("worst tree= %v\n", xs[0])
+	fmt.Printf("best tree=  %v\n", xs[len(xs)-1])
+
 	fmt.Println("--------")
 }
 
@@ -106,9 +142,9 @@ func (branch *Branch) build(forest *Forest, x [][]float64, results []bool, depth
 	branch.Size = len(results)
 	branch.Depth = depth
 
-	if (len(x) <= forest.LeafSize && vTrue != vFalse) || (branch.Gini == 0) {
+	if (len(x) <= forest.LeafSize) || (branch.Gini == 0) {
 		branch.IsLeaf = true
-		branch.LeafValue = vTrue > vFalse
+		branch.LeafValue = float64(vTrue) / float64(vTrue+vFalse)
 		return
 	}
 	//find best split
@@ -143,9 +179,6 @@ func (branch *Branch) build(forest *Forest, x [][]float64, results []bool, depth
 					bestGini = wg
 					bestValue = v
 					bestAtrr = a
-					//fmt.Println(repeat(".", depth), "BEST GINI", (t + f), "[", t, f, "]",
-					//	(vTrue - t + vFalse - f), "[", vTrue-t, vFalse-f, "]",
-					//	bestAtrr, bestGini, bestValue)
 				}
 				v = x[index][a]
 			}
@@ -181,7 +214,7 @@ func (branch *Branch) build(forest *Forest, x [][]float64, results []bool, depth
 	branch.Branch1.build(forest, x1, r1, depth+1)
 }
 
-func (tree *Tree) vote(x []float64) bool {
+func (tree *Tree) vote(x []float64) float64 {
 	return tree.Root.vote(x)
 }
 
@@ -209,7 +242,7 @@ func (branch *Branch) importance(imp []float64) {
 	}
 }
 
-func (branch *Branch) vote(x []float64) bool {
+func (branch *Branch) vote(x []float64) float64 {
 	if branch.IsLeaf {
 		return branch.LeafValue
 	} else {
@@ -272,9 +305,9 @@ type Forest struct {
 	Trees             []Tree
 	LeafSize          int // leaf size
 	MAttrs            int // attributes for choose proper split
-	NTrees            int //number of trees
-	NAttrs            int //number of attributes
-	NSize             int //len of data
+	NTrees            int // number of trees
+	NAttrs            int // number of attributes
+	NSize             int // len of data
 	ClassFunction     func(a, b int) float64
 	FeatureImportance []float64
 }
@@ -285,14 +318,15 @@ type ForestData struct {
 }
 
 type Tree struct {
-	Root Branch
+	Root       Branch
+	Validation float64
 }
 
 type Branch struct {
 	Atribute         int
 	Value            float64
 	IsLeaf           bool
-	LeafValue        bool
+	LeafValue        float64
 	Gini             float64
 	GiniGain         float64
 	Size             int
