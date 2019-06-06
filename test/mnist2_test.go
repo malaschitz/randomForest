@@ -1,4 +1,4 @@
-package main
+package test
 
 import (
 	"fmt"
@@ -6,13 +6,11 @@ import (
 	"image/png"
 	"log"
 	"os"
-	"time"
+	"testing"
 
 	"github.com/malaschitz/randomForest"
 	"github.com/petar/GoMNIST"
 )
-
-const TREES = 100
 
 /*
 	TREES   SUCCESS
@@ -24,15 +22,16 @@ const TREES = 100
 
 */
 
-func main() {
+func TestMNIST(t *testing.T) {
 	//read data
+	TREES := 100
 	size := 60000
 	xsize := 28 * 28
-	labels, err := GoMNIST.ReadLabelFile("test/train-labels-idx1-ubyte.gz")
+	labels, err := GoMNIST.ReadLabelFile("train-labels-idx1-ubyte.gz")
 	if err != nil {
 		panic(err)
 	}
-	nrow, ncol, imgs, err := GoMNIST.ReadImageFile("test/train-images-idx3-ubyte.gz")
+	nrow, ncol, imgs, err := GoMNIST.ReadImageFile("train-images-idx3-ubyte.gz")
 	if err != nil {
 		panic(err)
 	}
@@ -52,17 +51,15 @@ func main() {
 		}
 	}
 	forest.Data = randomForest.ForestData{X: x, Class: l}
-	t := time.Now()
 	forest.Train(TREES)
-	fmt.Println("train", time.Since(t))
 
 	//read test data
 	tsize := 10000
-	tlabels, err := GoMNIST.ReadLabelFile("test/t10k-labels-idx1-ubyte.gz")
+	tlabels, err := GoMNIST.ReadLabelFile("t10k-labels-idx1-ubyte.gz")
 	if err != nil {
 		panic(err)
 	}
-	_, _, timgs, err := GoMNIST.ReadImageFile("test/t10k-images-idx3-ubyte.gz")
+	_, _, timgs, err := GoMNIST.ReadImageFile("t10k-images-idx3-ubyte.gz")
 	if err != nil {
 		panic(err)
 	}
@@ -92,7 +89,7 @@ func main() {
 		if int(tlabels[i]) == bestI {
 			p++
 		} else {
-			fmt.Println(i, tlabels[i], bestI, bestV)
+			//fmt.Println(i, tlabels[i], bestI, bestV)
 			//writeImage(timgs[i], fmt.Sprintf("img%06d_%d_%d", i, tlabels[i], bestLabel))
 		}
 	}

@@ -1,16 +1,16 @@
-package main
+package test
 
 import (
 	"fmt"
 	"math/rand"
-	"time"
+	"testing"
 
 	"github.com/malaschitz/randomForest"
 )
 
-func main() {
+func TestDemo(t *testing.T) {
 	rand.Seed(1)
-	n := 10000
+	n := 1000
 	features := 30
 	classes := 10
 	trees := 100
@@ -21,14 +21,12 @@ func main() {
 	//fmt.Println("classes  ", res)
 	forestData := randomForest.ForestData{X: data, Class: res}
 	forest.Data = forestData
-	t := time.Now()
 	forest.Train(trees)
 	//fmt.Println("train", time.Since(t))
 	//test
 	s := 0
 	sw := 0
 
-	t = time.Now()
 	rand.Seed(2)
 	data, res = createDataset(n, features, classes)
 	for i := 0; i < n; i++ {
@@ -64,7 +62,7 @@ func main() {
 		}
 
 	}
-	fmt.Println("try", n, "times", time.Since(t))
+	fmt.Println("try", n, "times")
 	fmt.Printf("Correct:        %5.2f %%\n", float64(s)*100/float64(n))
 	fmt.Printf("Weight Correct: %5.2f %%\n", float64(sw)*100/float64(n))
 	forest.PrintFeatureImportance()
