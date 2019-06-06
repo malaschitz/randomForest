@@ -1,0 +1,110 @@
+package main
+
+import (
+	"fmt"
+	"image"
+	"image/png"
+	"log"
+	"os"
+	"time"
+
+	"github.com/malaschitz/randomForest"
+	"github.com/petar/GoMNIST"
+)
+
+const TREES = 100
+
+/*
+	TREES   SUCCESS
+	    1	80.96 %
+       10	94.56 %
+      100	96.07 %
+     1000	96.43 %
+    10000
+
+*/
+
+func main() {
+	//read data
+	size := 60000
+	xsize := 28 * 28
+	labels, err := GoMNIST.ReadLabelFile("test/train-labels-idx1-ubyte.gz")
+	if err != nil {
+		panic(err)
+	}
+	nrow, ncol, imgs, err := GoMNIST.ReadImageFile("test/train-images-idx3-ubyte.gz")
+	if err != nil {
+		panic(err)
+	}
+	if len(labels) != size || len(imgs) != size {
+		panic("Wrong size")
+	}
+	fmt.Println("Data", nrow, ncol, len(imgs), err)
+	//train 1 forest
+	forest := randomForest.Forest{}
+	x := make([][]float64, size)
+	l := make([]int, size)
+	for i := 0; i < size; i++ {
+		x[i] = make([]float64, xsize)
+		for j := 0; j < xsize; j++ {
+			x[i][j] = float64(imgs[i][j])
+			l[i] = int(labels[i])
+		}
+	}
+	forest.Data = randomForest.ForestData{X: x, Class: l}
+	t := time.Now()
+	forest.Train(TREES)
+	fmt.Println("train", time.Since(t))
+
+	//read test data
+	tsize := 10000
+	tlabels, err := GoMNIST.ReadLabelFile("test/t10k-labels-idx1-ubyte.gz")
+	if err != nil {
+		panic(err)
+	}
+	_, _, timgs, err := GoMNIST.ReadImageFile("test/t10k-images-idx3-ubyte.gz")
+	if err != nil {
+		panic(err)
+	}
+	if len(tlabels) != tsize || len(timgs) != tsize {
+		panic("Wrong size")
+	}
+	//calculate difference
+	x = make([][]float64, tsize)
+	for i := 0; i < tsize; i++ {
+		x[i] = make([]float64, xsize)
+		for j := 0; j < xsize; j++ {
+			x[i][j] = float64(timgs[i][j])
+		}
+	}
+	p := 0
+	for i := 0; i < tsize; i++ {
+		vote := forest.Vote(x[i])
+		bestI := -1
+		bestV := 0.0
+		for j, v := range vote {
+			if v > bestV {
+				bestV = v
+				bestI = j
+			}
+		}
+
+		if int(tlabels[i]) == bestI {
+			p++
+		} else {
+			fmt.Println(i, tlabels[i], bestI, bestV)
+			//writeImage(timgs[i], fmt.Sprintf("img%06d_%d_%d", i, tlabels[i], bestLabel))
+		}
+	}
+	fmt.Printf("Trees: %d Pomer: %5.2f%%\n", TREES, 100.0*float64(p)/float64(tsize))
+}
+
+func writeImage(data []byte, name string) {
+	img := image.NewGray(image.Rect(0, 0, 28, 28))
+	img.Pix = data
+	out, err := os.Create("./" + name + ".png")
+	err = png.Encode(out, img)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
