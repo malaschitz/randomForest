@@ -1,24 +1,29 @@
-package test
+package main
 
 import (
 	"fmt"
-	"testing"
+	"math/rand"
 	"time"
 
 	"github.com/malaschitz/randomForest"
 	"github.com/petar/GoMNIST"
 )
 
-func TestMNIST_binary_tree(t *testing.T) {
+/*
+	Train 10 forests. For every label own forest.
+	Results are not better as one forest with 10x trees.
+*/
+func main() {
 	//read data
+	rand.Seed(1)
 	TREES := 10
 	size := 60000
 	xsize := 28 * 28
-	labels, err := GoMNIST.ReadLabelFile("train-labels-idx1-ubyte.gz")
+	labels, err := GoMNIST.ReadLabelFile("examples/train-labels-idx1-ubyte.gz")
 	if err != nil {
 		panic(err)
 	}
-	nrow, ncol, imgs, err := GoMNIST.ReadImageFile("train-images-idx3-ubyte.gz")
+	nrow, ncol, imgs, err := GoMNIST.ReadImageFile("examples/train-images-idx3-ubyte.gz")
 	if err != nil {
 		panic(err)
 	}
@@ -50,11 +55,11 @@ func TestMNIST_binary_tree(t *testing.T) {
 
 	//read test data
 	tsize := 10000
-	tlabels, err := GoMNIST.ReadLabelFile("t10k-labels-idx1-ubyte.gz")
+	tlabels, err := GoMNIST.ReadLabelFile("examples/t10k-labels-idx1-ubyte.gz")
 	if err != nil {
 		panic(err)
 	}
-	_, _, timgs, err := GoMNIST.ReadImageFile("t10k-images-idx3-ubyte.gz")
+	_, _, timgs, err := GoMNIST.ReadImageFile("examples/t10k-images-idx3-ubyte.gz")
 	if err != nil {
 		panic(err)
 	}
@@ -69,6 +74,7 @@ func TestMNIST_binary_tree(t *testing.T) {
 			x[i][j] = float64(timgs[i][j])
 		}
 	}
+
 	p := 0
 	for i := 0; i < tsize; i++ {
 		bestLabel := -1
@@ -83,9 +89,9 @@ func TestMNIST_binary_tree(t *testing.T) {
 		if int(tlabels[i]) == bestLabel {
 			p++
 		} else {
-			fmt.Println(i, tlabels[i], bestVote, bestLabel)
+			//fmt.Println(i, tlabels[i], bestVote, bestLabel)
 			//writeImage(timgs[i], fmt.Sprintf("img%06d_%d_%d", i, tlabels[i], bestLabel))
 		}
 	}
-	fmt.Printf("Trees: %d Pomer: %5.2f%%\n", TREES, 100.0*float64(p)/float64(tsize))
+	fmt.Printf("Trees: %d Results: %5.2f%%\n", TREES, 100.0*float64(p)/float64(tsize))
 }

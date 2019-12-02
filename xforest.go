@@ -33,8 +33,6 @@ func (forest *Forest) TrainX(trees int) {
 	wg.Add(trees)
 	for i := 0; i < trees; i++ {
 		go forest.newXTree(i, &wg)
-		//forest.newTree(i, &wg)
-		//fmt.Println(i)
 	}
 	wg.Wait()
 	imp := make([]float64, forest.Features)
@@ -43,7 +41,6 @@ func (forest *Forest) TrainX(trees int) {
 		for i := 0; i < forest.Features; i++ {
 			imp[i] += z[i]
 		}
-		//forest.Trees[i].Root.print()
 	}
 	for i := 0; i < forest.Features; i++ {
 		imp[i] = imp[i] / float64(trees)

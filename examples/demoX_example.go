@@ -1,34 +1,36 @@
-package test
+package main
 
 import (
 	"fmt"
 	"math/rand"
-	"testing"
 
 	"github.com/malaschitz/randomForest"
+	"github.com/malaschitz/randomForest/example/generator"
 )
 
-func TestDemo(t *testing.T) {
+/*
+	Demo with eXtremely randomized Random Forest.
+	It is quicker than standard forest but it has wrong results.
+*/
+
+func main() {
 	rand.Seed(1)
 	n := 1000
-	features := 30
-	classes := 10
-	trees := 100
+	features := 20
+	classes := 2
+	trees := 1000
 
 	forest := randomForest.Forest{}
-	data, res := createDataset(n, features, classes)
-	//fmt.Println("data     ", data)
-	//fmt.Println("classes  ", res)
+	data, res := generator.CreateDataset(n, features, classes)
 	forestData := randomForest.ForestData{X: data, Class: res}
 	forest.Data = forestData
-	forest.Train(trees)
-	//fmt.Println("train", time.Since(t))
+	forest.TrainX(trees)
 	//test
 	s := 0
 	sw := 0
 
 	rand.Seed(2)
-	data, res = createDataset(n, features, classes)
+	data, res = generator.CreateDataset(n, features, classes)
 	for i := 0; i < n; i++ {
 		vote := forest.Vote(data[i])
 		bestV := 0.0
@@ -67,37 +69,4 @@ func TestDemo(t *testing.T) {
 	fmt.Printf("Weight Correct: %5.2f %%\n", float64(sw)*100/float64(n))
 	forest.PrintFeatureImportance()
 
-}
-
-func createDataset(N, Features, Classes int) ([][]float64, []int) {
-	data := make([][]float64, 0)
-	res := make([]int, 0)
-	for i := 0; i < N; i++ {
-		d := make([]float64, Features)
-		for j := 0; j < Features; j++ {
-			d[j] = rand.Float64()
-		}
-		data = append(data, d)
-		v := classit(d, Classes)
-		res = append(res, v)
-	}
-	return data, res
-}
-
-func classit(a []float64, c int) int {
-	s := make([]float64, c)
-	for i := 0; i < len(a); i++ {
-		k := float64(i/c) + 1
-		s[i%c] += k * a[i]
-	}
-	cbest := -1
-	sbest := 0.0
-	for i := 0; i < c; i++ {
-		if s[i] > sbest {
-			sbest = s[i]
-			cbest = i
-		}
-	}
-	//fmt.Println("class it", a, c, cbest, sbest, s)
-	return cbest
 }

@@ -1,37 +1,32 @@
-package test
+package main
 
 import (
 	"fmt"
 	"image"
 	"image/png"
 	"log"
+	"math/rand"
 	"os"
-	"testing"
 
 	"github.com/malaschitz/randomForest"
 	"github.com/petar/GoMNIST"
 )
 
 /*
-	TREES   SUCCESS
-	    1	80.96 %
-       10	94.56 %
-      100	96.07 %
-     1000	96.43 %
-    10000
-
+	Train 1 forest for all labels.
 */
 
-func TestMNIST(t *testing.T) {
+func main() {
 	//read data
+	rand.Seed(1)
 	TREES := 100
 	size := 60000
 	xsize := 28 * 28
-	labels, err := GoMNIST.ReadLabelFile("train-labels-idx1-ubyte.gz")
+	labels, err := GoMNIST.ReadLabelFile("examples/train-labels-idx1-ubyte.gz")
 	if err != nil {
 		panic(err)
 	}
-	nrow, ncol, imgs, err := GoMNIST.ReadImageFile("train-images-idx3-ubyte.gz")
+	nrow, ncol, imgs, err := GoMNIST.ReadImageFile("examples/train-images-idx3-ubyte.gz")
 	if err != nil {
 		panic(err)
 	}
@@ -55,11 +50,11 @@ func TestMNIST(t *testing.T) {
 
 	//read test data
 	tsize := 10000
-	tlabels, err := GoMNIST.ReadLabelFile("t10k-labels-idx1-ubyte.gz")
+	tlabels, err := GoMNIST.ReadLabelFile("examples/t10k-labels-idx1-ubyte.gz")
 	if err != nil {
 		panic(err)
 	}
-	_, _, timgs, err := GoMNIST.ReadImageFile("t10k-images-idx3-ubyte.gz")
+	_, _, timgs, err := GoMNIST.ReadImageFile("examples/t10k-images-idx3-ubyte.gz")
 	if err != nil {
 		panic(err)
 	}
@@ -93,7 +88,7 @@ func TestMNIST(t *testing.T) {
 			//writeImage(timgs[i], fmt.Sprintf("img%06d_%d_%d", i, tlabels[i], bestLabel))
 		}
 	}
-	fmt.Printf("Trees: %d Pomer: %5.2f%%\n", TREES, 100.0*float64(p)/float64(tsize))
+	fmt.Printf("Trees: %d Results: %5.2f%%\n", TREES, 100.0*float64(p)/float64(tsize))
 }
 
 func writeImage(data []byte, name string) {

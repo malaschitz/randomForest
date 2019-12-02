@@ -1,31 +1,31 @@
-package test
+package main
 
 import (
 	"fmt"
 	"math/rand"
-	"testing"
 
 	"github.com/malaschitz/randomForest"
+	"github.com/malaschitz/randomForest/example/generator"
 )
 
-func TestExtrRF(t *testing.T) {
+func main() {
 	rand.Seed(1)
-	n := 10000
-	features := 30
-	classes := 10
-	trees := 100
+	n := 1000
+	features := 20
+	classes := 2
+	trees := 1000
 
 	forest := randomForest.Forest{}
-	data, res := createDataset(n, features, classes)
+	data, res := generator.CreateDataset(n, features, classes)
 	forestData := randomForest.ForestData{X: data, Class: res}
 	forest.Data = forestData
-	forest.TrainX(trees)
+	forest.Train(trees)
 	//test
 	s := 0
 	sw := 0
 
 	rand.Seed(2)
-	data, res = createDataset(n, features, classes)
+	data, res = generator.CreateDataset(n, features, classes)
 	for i := 0; i < n; i++ {
 		vote := forest.Vote(data[i])
 		bestV := 0.0
@@ -38,10 +38,7 @@ func TestExtrRF(t *testing.T) {
 		}
 		if bestI == res[i] {
 			s++
-		} else {
-			//fmt.Println("TEST", i, "VOTE", vote, data[i], "=", res[i], "\ts=", s)
 		}
-
 		//
 		vote = forest.WeightVote(data[i])
 		bestV = 0.0
@@ -54,8 +51,6 @@ func TestExtrRF(t *testing.T) {
 		}
 		if bestI == res[i] {
 			sw++
-		} else {
-			//fmt.Println("TEST", i, "VOTE", vote, data[i], "=", res[i], "\ts=", sw)
 		}
 
 	}
