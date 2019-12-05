@@ -1,4 +1,4 @@
-package randomForest
+package randomforest
 
 import (
 	"fmt"
@@ -39,7 +39,7 @@ type Tree struct {
 
 // Branch is tree structure of branches
 type Branch struct {
-	Atribute         int
+	Attribute        int
 	Value            float64
 	IsLeaf           bool
 	LeafValue        []float64
@@ -301,14 +301,14 @@ func (branch *Branch) build(forest *Forest, x [][]float64, class []int, depth in
 	}
 	//split it
 	branch.GiniGain = branch.Gini - bestGini
-	branch.Atribute = bestAtrr
+	branch.Attribute = bestAtrr
 	branch.Value = bestValue
 	x0 := make([][]float64, 0)
 	x1 := make([][]float64, 0)
 	c0 := make([]int, 0)
 	c1 := make([]int, 0)
 	for i := 0; i < branch.Size; i++ {
-		if x[i][branch.Atribute] > branch.Value {
+		if x[i][branch.Attribute] > branch.Value {
 			x1 = append(x1, x[i])
 			c1 = append(c1, class[i])
 		} else {
@@ -346,23 +346,20 @@ func (tree *Tree) importance(forest *Forest) []float64 {
 func (branch *Branch) importance(imp []float64) {
 	if branch.IsLeaf {
 		return
-	} else {
-		imp[branch.Atribute] += float64(branch.Size) * branch.GiniGain
-		branch.Branch0.importance(imp)
-		branch.Branch1.importance(imp)
 	}
+	imp[branch.Attribute] += float64(branch.Size) * branch.GiniGain
+	branch.Branch0.importance(imp)
+	branch.Branch1.importance(imp)
 }
 
 func (branch *Branch) vote(x []float64) []float64 {
 	if branch.IsLeaf {
 		return branch.LeafValue
-	} else {
-		if x[branch.Atribute] > branch.Value {
-			return branch.Branch1.vote(x)
-		} else {
-			return branch.Branch0.vote(x)
-		}
 	}
+	if x[branch.Attribute] > branch.Value {
+		return branch.Branch1.vote(x)
+	}
+	return branch.Branch0.vote(x)
 }
 
 func (branch *Branch) print() {
@@ -371,7 +368,7 @@ func (branch *Branch) print() {
 			repeat("_", branch.Depth*3), branch.LeafValue, branch.Size, branch.Gini)
 	} else {
 		fmt.Printf("%s ... size: %6d\tattr: %3d\tgini: %5.4f %5.4f \t\tvalue: %4.3f\n",
-			repeat("_", branch.Depth*3), branch.Size, branch.Atribute, branch.Gini, branch.GiniGain, branch.Value)
+			repeat("_", branch.Depth*3), branch.Size, branch.Attribute, branch.Gini, branch.GiniGain, branch.Value)
 		branch.Branch0.print()
 		branch.Branch1.print()
 		fmt.Printf("%s\n", repeat("_", branch.Depth*3))
@@ -381,9 +378,8 @@ func (branch *Branch) print() {
 func (branch *Branch) branches() int {
 	if branch.IsLeaf {
 		return 1
-	} else {
-		return branch.Branch0.branches() + branch.Branch1.branches()
 	}
+	return branch.Branch0.branches() + branch.Branch1.branches()
 }
 
 func repeat(s string, n int) string {

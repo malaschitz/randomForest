@@ -1,4 +1,4 @@
-package randomForest
+package randomforest
 
 import (
 	"math"
@@ -6,7 +6,7 @@ import (
 	"sync"
 )
 
-// Train Extremely randomized trees
+// TrainX Extremely randomized trees
 func (forest *Forest) TrainX(trees int) {
 	forest.NSize = len(forest.Data.X)
 	forest.Features = len(forest.Data.X[0])
@@ -101,7 +101,7 @@ func (branch *Branch) xbuild(forest *Forest, x [][]float64, class []int, depth i
 		}
 		return
 	}
-	//find best extremly random split
+	//find best extremely random split
 	attrsRandom := rand.Perm(forest.Features)[:forest.MFeatures]
 	var bestAtrr int
 	var bestSplit float64
@@ -144,14 +144,14 @@ func (branch *Branch) xbuild(forest *Forest, x [][]float64, class []int, depth i
 	}
 	//split it
 	branch.GiniGain = branch.Gini - bestGini
-	branch.Atribute = bestAtrr
+	branch.Attribute = bestAtrr
 	branch.Value = bestSplit
 	x0 := make([][]float64, 0)
 	x1 := make([][]float64, 0)
 	c0 := make([]int, 0)
 	c1 := make([]int, 0)
 	for i := 0; i < branch.Size; i++ {
-		if x[i][branch.Atribute] > branch.Value {
+		if x[i][branch.Attribute] > branch.Value {
 			x1 = append(x1, x[i])
 			c1 = append(c1, class[i])
 		} else {

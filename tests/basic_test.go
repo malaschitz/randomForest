@@ -4,7 +4,7 @@ import (
 	"math/rand"
 	"testing"
 
-	"github.com/malaschitz/randomForest"
+	randomforest "github.com/malaschitz/randomForest"
 )
 
 func TestSimple(t *testing.T) {
@@ -16,8 +16,8 @@ func TestSimple(t *testing.T) {
 		xData = append(xData, x)
 		yData = append(yData, y)
 	}
-	forest := randomForest.Forest{}
-	forestData := randomForest.ForestData{X: xData, Class: yData}
+	forest := randomforest.Forest{}
+	forestData := randomforest.ForestData{X: xData, Class: yData}
 	forest.Data = forestData
 	forest.Train(1000)
 	//test

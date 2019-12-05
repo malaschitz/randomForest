@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"math/rand"
 
-	"github.com/malaschitz/randomForest"
+	randomforest "github.com/malaschitz/randomForest"
 	"github.com/petar/GoMNIST"
 )
 
@@ -30,9 +30,9 @@ func ExampleMNIST() {
 		panic("Wrong size")
 	}
 	//train 10 forests
-	forests := [10]randomForest.Forest{}
+	forests := [10]randomforest.Forest{}
 	for label := 0; label < 10; label++ {
-		forest := randomForest.Forest{}
+		forest := randomforest.Forest{}
 		x := make([][]float64, size)
 		l := make([]int, size)
 		for i := 0; i < size; i++ {
@@ -44,7 +44,7 @@ func ExampleMNIST() {
 				l[i] = 1
 			}
 		}
-		forest.Data = randomForest.ForestData{X: x, Class: l}
+		forest.Data = randomforest.ForestData{X: x, Class: l}
 		forest.Train(TREES)
 		forests[label] = forest
 	}

@@ -1,10 +1,11 @@
-package randomForest
+package randomforest
 
 import (
 	"fmt"
 	"math/rand"
 )
 
+// DeepForest deep forest implementation where is standard forest, mini forests (Groves) and final ForestDeep (Forest + Groves)
 type DeepForest struct {
 	Forest         *Forest
 	ForestDeep     Forest
@@ -17,6 +18,7 @@ type DeepForest struct {
 	Results        []float64
 }
 
+// BuildDeepForest create DeepForest from Forest
 func (forest *Forest) BuildDeepForest() DeepForest {
 	forest.defaults()
 	df := DeepForest{
@@ -26,6 +28,7 @@ func (forest *Forest) BuildDeepForest() DeepForest {
 	return df
 }
 
+// Train DeepForest with parameters of number of groves, number of trees in groves, number of trees in final Deep Forest
 func (dForest *DeepForest) Train(groves int, trees int, deepTrees int) {
 	dForest.NGroves = groves
 	dForest.NTrees = trees
@@ -94,6 +97,7 @@ func (dForest *DeepForest) Train(groves int, trees int, deepTrees int) {
 	dForest.ForestDeep.Train(deepTrees)
 }
 
+// Vote return result of DeepForest
 func (dForest *DeepForest) Vote(x []float64) []float64 {
 	//groves
 	deepx := make([]float64, len(x))
@@ -120,7 +124,3 @@ func (dForest *DeepForest) Vote(x []float64) []float64 {
 	}
 	return votes
 }
-
-//Created by Richard Malaschitz malaschitz@gmail.com
-//2019-06-10 19:01
-//Copyright (c) 2018. All Rights Reserved.

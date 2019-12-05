@@ -5,13 +5,13 @@ import (
 	"math/rand"
 	"testing"
 
-	"github.com/malaschitz/randomForest"
+	randomforest "github.com/malaschitz/randomForest"
 )
 
 func TestContinuous(t *testing.T) {
 	rand.Seed(1)
 	n := 1000
-	forest := randomForest.Forest{}
+	forest := randomforest.Forest{}
 	s := 0
 	for i := 0; i < n-1; i++ {
 		data := []float64{rand.Float64(), rand.Float64()}

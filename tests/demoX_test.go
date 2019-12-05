@@ -5,7 +5,7 @@ import (
 	"math/rand"
 	"testing"
 
-	"github.com/malaschitz/randomForest"
+	randomforest "github.com/malaschitz/randomForest"
 	"github.com/malaschitz/randomForest/tests/generator"
 )
 
@@ -21,9 +21,9 @@ func TestDemoX(t *testing.T) {
 	classes := 2
 	trees := 1000
 
-	forest := randomForest.Forest{}
+	forest := randomforest.Forest{}
 	data, res := generator.CreateDataset(n, features, classes)
-	forestData := randomForest.ForestData{X: data, Class: res}
+	forestData := randomforest.ForestData{X: data, Class: res}
 	forest.Data = forestData
 	forest.TrainX(trees)
 	//test

@@ -5,7 +5,7 @@ import (
 	"math/rand"
 	"testing"
 
-	"github.com/malaschitz/randomForest"
+	randomforest "github.com/malaschitz/randomForest"
 	"github.com/malaschitz/randomForest/tests/generator"
 )
 
@@ -19,12 +19,12 @@ func TestForest2(t *testing.T) {
 	classes := 2
 	trees := 1000
 
-	forest := randomForest.Forest{}
+	forest := randomforest.Forest{}
 	data, res := generator.CreateDataset(n, features, classes)
 	for j := 0; j < n; j++ {
 		createFeatures2(&data[j])
 	}
-	forestData := randomForest.ForestData{X: data, Class: res}
+	forestData := randomforest.ForestData{X: data, Class: res}
 	forest.Data = forestData
 	forest.Train(trees)
 	//test
