@@ -6,7 +6,7 @@ go test ./... -cover -coverpkg=.
 ```
 
 # randomForest
-Random Forest implementation in golang.
+[Random Forest](https://en.wikipedia.org/wiki/Random_forest) implementation in golang. 
 
 ## Simple Random Forest
 
