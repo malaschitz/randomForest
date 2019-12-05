@@ -3,17 +3,19 @@ package main
 import (
 	"fmt"
 	"math/rand"
+	"testing"
 
 	"github.com/malaschitz/randomForest"
-	"github.com/malaschitz/randomForest/example/generator"
+	"github.com/malaschitz/randomForest/tests/generator"
 )
 
-func main() {
+//TestDemo simple Random Foresr exaple
+func TestDemo(t *testing.T) {
 	rand.Seed(1)
-	n := 1000
+	n := 100
 	features := 20
 	classes := 2
-	trees := 1000
+	trees := 100
 
 	forest := randomForest.Forest{}
 	data, res := generator.CreateDataset(n, features, classes)

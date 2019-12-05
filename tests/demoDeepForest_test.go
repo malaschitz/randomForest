@@ -3,14 +3,15 @@ package main
 import (
 	"fmt"
 	"math/rand"
+	"testing"
 
 	"github.com/malaschitz/randomForest"
-	"github.com/malaschitz/randomForest/example/generator"
+	"github.com/malaschitz/randomForest/tests/generator"
 )
 
 // DeepForest create a bunch of subforests. Results of these subforest are a new inputs (new attributes for original dataset).
 // It has reason for using only with special examples !
-func main() {
+func TestDeepForest(t *testing.T) {
 	rand.Seed(1)
 	n := 10000
 	features := 20

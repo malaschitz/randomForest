@@ -3,12 +3,13 @@ package main
 import (
 	"fmt"
 	"math/rand"
+	"testing"
 
-	"github.com/malaschitz/randomForest/example/generator"
+	"github.com/malaschitz/randomForest/tests/generator"
 )
 
 //Example of generated dataset
-func main() {
+func TestGenerator(t *testing.T) {
 	rand.Seed(1)
 	fmt.Println("-------")
 	fmt.Println("Dataset with 10 examples, 4 features, 3 classes")

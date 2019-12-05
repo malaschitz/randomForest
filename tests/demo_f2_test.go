@@ -3,28 +3,30 @@ package main
 import (
 	"fmt"
 	"math/rand"
+	"testing"
 
 	"github.com/malaschitz/randomForest"
-	"github.com/malaschitz/randomForest/example/generator"
+	"github.com/malaschitz/randomForest/tests/generator"
 )
 
 /*
-	Demo with eXtremely randomized Random Forest.
-	It is quicker than standard forest but it has wrong results.
+	Example of data when you need create more features. It is often far better method than DeepForest or NN.
 */
-
-func main() {
+func TestForest2(t *testing.T) {
 	rand.Seed(1)
-	n := 1000
+	n := 100
 	features := 20
 	classes := 2
 	trees := 1000
 
 	forest := randomForest.Forest{}
 	data, res := generator.CreateDataset(n, features, classes)
+	for j := 0; j < n; j++ {
+		createFeatures2(&data[j])
+	}
 	forestData := randomForest.ForestData{X: data, Class: res}
 	forest.Data = forestData
-	forest.TrainX(trees)
+	forest.Train(trees)
 	//test
 	s := 0
 	sw := 0
@@ -32,6 +34,7 @@ func main() {
 	rand.Seed(2)
 	data, res = generator.CreateDataset(n, features, classes)
 	for i := 0; i < n; i++ {
+		createFeatures2(&data[i])
 		vote := forest.Vote(data[i])
 		bestV := 0.0
 		bestI := -1
@@ -43,8 +46,6 @@ func main() {
 		}
 		if bestI == res[i] {
 			s++
-		} else {
-			//fmt.Println("TEST", i, "VOTE", vote, data[i], "=", res[i], "\ts=", s)
 		}
 
 		//
@@ -59,8 +60,6 @@ func main() {
 		}
 		if bestI == res[i] {
 			sw++
-		} else {
-			//fmt.Println("TEST", i, "VOTE", vote, data[i], "=", res[i], "\ts=", sw)
 		}
 
 	}
@@ -69,4 +68,17 @@ func main() {
 	fmt.Printf("Weight Correct: %5.2f %%\n", float64(sw)*100/float64(n))
 	forest.PrintFeatureImportance()
 
+}
+
+func createFeatures2(f *[]float64) {
+	flen := len(*f)
+	ar := *f
+	for i := 0; i < flen; i++ {
+		for j := i; j < flen; j++ {
+			a := ar[i] * ar[j]
+			*f = append(*f, a)
+			a = ar[i] + ar[j]
+			*f = append(*f, a)
+		}
+	}
 }

@@ -3,13 +3,14 @@ package main
 import (
 	"fmt"
 	"math/rand"
+	"testing"
 
 	"github.com/malaschitz/randomForest"
 )
 
-func main() {
+func TestContinuous(t *testing.T) {
 	rand.Seed(1)
-	n := 10000
+	n := 1000
 	forest := randomForest.Forest{}
 	s := 0
 	for i := 0; i < n-1; i++ {
@@ -18,7 +19,7 @@ func main() {
 		if data[0]+data[1] > 1 {
 			res = 1
 		}
-		forest.AddDataRow(data, res, 1000, 10, 2000) 
+		forest.AddDataRow(data, res, 100, 10, 200)
 
 		data = []float64{rand.Float64(), rand.Float64()}
 		res = 0

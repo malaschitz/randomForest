@@ -1,3 +1,5 @@
+github.com/mattes/migrate v3.0.1+incompatible h1:PhAZP82Vqejw8JZLF4U5UkLGzEVaCnbtJpB6DONcDow=
+github.com/mattes/migrate v3.0.1+incompatible/go.mod h1:LJcqgpj1jQoxv3m2VXd3drv0suK5CbN/RCX7MXwgnVI=
 github.com/petar/GoMNIST v0.0.0-20150320212226-2fbe10d0fa63 h1:xS51uYfMeRA+pLKKsXaM/UI06LkyRQ1ItZgOvrOgIu8=
 github.com/petar/GoMNIST v0.0.0-20150320212226-2fbe10d0fa63/go.mod h1:d7fwuOuDrb75/3iplL4oWbe4MBZgWil/pSVR3ItECVU=
 golang.org/x/exp v0.0.0-20180321215751-8460e604b9de/go.mod h1:CJ0aWSM057203Lf6IL+f9T1iT9GByDxfZKAQTCR3kQA=

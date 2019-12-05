@@ -1,3 +1,10 @@
+GoDoc: https://godoc.org/github.com/malaschitz/randomForest
+
+Test: 
+```go
+go test ./... -cover -coverpkg=.  
+```
+
 # randomForest
 Random Forest implementation in golang.
 

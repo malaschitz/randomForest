@@ -1,13 +1,13 @@
 package main
 
 import (
-	"fmt"
 	"math/rand"
+	"testing"
 
 	"github.com/malaschitz/randomForest"
 )
 
-func main() {
+func TestSimple(t *testing.T) {
 	xData := [][]float64{}
 	yData := []int{}
 	for i := 0; i < 1000; i++ {
@@ -22,15 +22,13 @@ func main() {
 	forest.Train(1000)
 	//test
 	vote := forest.Vote([]float64{0.1, 0.1, 0.1, 0.1})
-	fmt.Println("Vote", vote)
 	if vote[0] < vote[1] || vote[0] < vote[2] || vote[0] < vote[3] {
-		panic("Wrong Machine Learning !")
+		t.Error("Wrong Machine Learning !")
 	}
 
 	vote = forest.Vote([]float64{0.9, 0.9, 0.9, 0.9})
-	fmt.Println("Vote", vote)
 	if vote[3] < vote[0] || vote[3] < vote[1] || vote[3] < vote[2] {
-		panic("Wrong Machine Learning !")
+		t.Error("Wrong Machine Learning !")
 	}
 
 }

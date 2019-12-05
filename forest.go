@@ -12,28 +12,32 @@ import (
 
 var mux = &sync.Mutex{}
 
+//Forest je base class for whole forest with database, properties of Forest and trees.
 type Forest struct {
-	Data              ForestData
-	Trees             []Tree
-	Features          int // number of attributes
-	Classes           int // number of classes
-	LeafSize          int // leaf size
-	MFeatures         int // attributes for choose proper split
-	NTrees            int // number of trees
-	NSize             int // len of data
-	FeatureImportance []float64
+	Data              ForestData // database for calculate trees
+	Trees             []Tree     // all generated trees
+	Features          int        // number of attributes
+	Classes           int        // number of classes
+	LeafSize          int        // leaf size
+	MFeatures         int        // attributes for choose proper split
+	NTrees            int        // number of trees
+	NSize             int        // len of data
+	FeatureImportance []float64  //stats of FeatureImportance
 }
 
+// ForestData contains database
 type ForestData struct {
-	X     [][]float64
-	Class []int
+	X     [][]float64 // All data are float64 numbers
+	Class []int       // Result should be int numbers 0,1,2,..
 }
 
+// Tree is one random tree in forest with Branch and validation number
 type Tree struct {
 	Root       Branch
 	Validation float64
 }
 
+// Branch is tree structure of branches
 type Branch struct {
 	Atribute         int
 	Value            float64
@@ -46,6 +50,7 @@ type Branch struct {
 	Depth            int
 }
 
+// Train run training process. Parameter is number of calculated trees.
 func (forest *Forest) Train(trees int) {
 	forest.defaults()
 	forest.NTrees = trees
@@ -127,6 +132,7 @@ func (forest *Forest) defaults() {
 	}
 }
 
+// Vote is used for calculate class in existed forest
 func (forest *Forest) Vote(x []float64) []float64 {
 	votes := make([]float64, forest.Classes)
 	for i := 0; i < forest.NTrees; i++ {
