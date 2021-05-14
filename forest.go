@@ -161,7 +161,7 @@ func (forest *Forest) WeightVote(x []float64) []float64 {
 			}
 			total += w
 		} else {
-			fmt.Println("wv", e, w, total)
+			//fmt.Println("wv", e, w, total)
 		}
 	}
 	for j := 0; j < forest.Classes; j++ {
