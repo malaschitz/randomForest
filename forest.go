@@ -347,9 +347,10 @@ func (branch *Branch) importance(imp []float64) {
 	if branch.IsLeaf {
 		return
 	}
-	imp[branch.Attribute] += float64(branch.Size) * branch.GiniGain
+	imp[branch.Attribute] += float64(branch.Size) * branch.Gini
 	branch.Branch0.importance(imp)
 	branch.Branch1.importance(imp)
+
 }
 
 func (branch *Branch) vote(x []float64) []float64 {
