@@ -19,9 +19,8 @@ go test ./... -cover -coverpkg=.
 		xData = append(xData, x)
 		yData = append(yData, y)
 	}
-	forest := randomForest.Forest{}
-	forestData := randomForest.ForestData{X: xData, Class: yData}
-	forest.Data = forestData
+	forest := randomForest.Forest{}		
+	forest.Data = randomforest.ForestData{X: xData, Class: yData}
 	forest.Train(1000)
 	//test
 	fmt.Println("Vote", forest.Vote([]float64{0.1, 0.1, 0.1, 0.1})) 
