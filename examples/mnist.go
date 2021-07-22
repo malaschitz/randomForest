@@ -1,5 +1,10 @@
 package main
 
+/*
+	Removed from test package, because execution time is too long.
+	A it was problem where was package publihed on AwesomeGO.
+*/
+
 import (
 	"fmt"
 	"math/rand"
@@ -15,14 +20,14 @@ import (
 func ExampleMNIST() {
 	//read data
 	rand.Seed(1)
-	TREES := 10
+	TREES := 100
 	size := 60000
 	xsize := 28 * 28
-	labels, err := GoMNIST.ReadLabelFile("train-labels-idx1-ubyte.gz")
+	labels, err := GoMNIST.ReadLabelFile("examples/train-labels-idx1-ubyte.gz")
 	if err != nil {
 		panic(err)
 	}
-	_, _, imgs, err := GoMNIST.ReadImageFile("train-images-idx3-ubyte.gz")
+	_, _, imgs, err := GoMNIST.ReadImageFile("examples/train-images-idx3-ubyte.gz")
 	if err != nil {
 		panic(err)
 	}
@@ -51,11 +56,11 @@ func ExampleMNIST() {
 
 	//read test data
 	tsize := 10000
-	tlabels, err := GoMNIST.ReadLabelFile("t10k-labels-idx1-ubyte.gz")
+	tlabels, err := GoMNIST.ReadLabelFile("examples/t10k-labels-idx1-ubyte.gz")
 	if err != nil {
 		panic(err)
 	}
-	_, _, timgs, err := GoMNIST.ReadImageFile("t10k-images-idx3-ubyte.gz")
+	_, _, timgs, err := GoMNIST.ReadImageFile("examples/t10k-images-idx3-ubyte.gz")
 	if err != nil {
 		panic(err)
 	}
@@ -89,6 +94,10 @@ func ExampleMNIST() {
 			//writeImage(timgs[i], fmt.Sprintf("img%06d_%d_%d", i, tlabels[i], bestLabel))
 		}
 	}
-	fmt.Printf("Trees: %d Results: %5.0f%%\n", TREES, 100.0*float64(p)/float64(tsize))
-	//Output: Trees: 10 Results:    95%
+	fmt.Printf("Trees: %d Results: %5.1f%%\n", TREES, 100.0*float64(p)/float64(tsize))
+	//Output: Trees: 10 Results: 96.0%
+}
+
+func main() {
+	ExampleMNIST()
 }

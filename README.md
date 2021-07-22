@@ -54,3 +54,25 @@ forest.AddDataRow(data, res, 1000, 10, 2000)
 // AddDataRow : add new row, trim oldest row if there is more than 1000 rows, calculate a new 10 trees, but remove oldest trees if there is more than 2000 trees.
 ```
 
+# Boruta Algorithm for feature selection
+
+Boruta algorithm was developed as package for language R. 
+It is one of most effective feature selection algorithm.
+There is [paper](https://www.jstatsoft.org/article/view/v036i11) in Journal of Statistical Software.
+
+Boruta algorithm use random forest for selection important features.
+
+```go
+	xData := ... //data
+	yData := ... //labels
+	selectedFeatures := randomforest.BorutaDefault(xData, yData)
+	// or randomforest.BorutaDefault(xData, yData, 100, 20, 0.05, true, true)
+```
+
+In _/examples_ is example with [MNIST database](https://en.wikipedia.org/wiki/MNIST_database). 
+On picture are selected features (495 from 784) from images. 
+
+![boruta 05](boruta05.png)
+
+
+
