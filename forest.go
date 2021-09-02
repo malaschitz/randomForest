@@ -26,6 +26,7 @@ type Forest struct {
 	MFeatures         int        // attributes for choose proper split
 	NTrees            int        // number of trees
 	NSize             int        // len of data
+	MaxDepth          int        // max depth of forest
 	FeatureImportance []float64  //stats of FeatureImportance
 }
 
@@ -137,6 +138,9 @@ func (forest *Forest) defaults() {
 		} else if forest.LeafSize > 50 {
 			forest.LeafSize = 50
 		}
+	}
+	if forest.MaxDepth == 0 {
+		forest.MaxDepth = 10
 	}
 }
 
@@ -260,7 +264,7 @@ func (branch *Branch) build(forest *Forest, x [][]float64, class []int, depth in
 	branch.Size = len(class)
 	branch.Depth = depth
 
-	if (len(x) <= forest.LeafSize) || (branch.Gini == 0) {
+	if (len(x) <= forest.LeafSize) || (branch.Gini == 0) || branch.Depth == forest.MaxDepth {
 		branch.IsLeaf = true
 		branch.LeafValue = make([]float64, forest.Classes)
 		for i, r := range classCount {
