@@ -44,8 +44,9 @@ func main() {
 	//sample for testing
 	//x, l = sample(x, l, 200)
 	//
-	borutaFeatuters := randomforest.BorutaDefault(x, l)
+	borutaFeatuters, stats := randomforest.BorutaDefault(x, l)
 	//borutaFeatuters := randomforest.Boruta(x, l, 100, 20, 0.05, true, true)
+	fmt.Println("Stats", stats)
 	image := make([]byte, xsize)
 	for _, v := range borutaFeatuters {
 		image[v] = 255
