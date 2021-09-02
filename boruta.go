@@ -17,11 +17,11 @@ import (
 	recursive bool - algorithm repeat process until all features are important
 	verbose bool - will print process of boruta algorithm.
 */
-func BorutaDefault(x [][]float64, class []int) []int {
+func BorutaDefault(x [][]float64, class []int) ([]int, map[int]int) {
 	return Boruta(x, class, 100, 20, 0.05, true, true)
 }
 
-func Boruta(x [][]float64, class []int, trees int, cycles int, threshold float64, recursive bool, verbose bool) []int {
+func Boruta(x [][]float64, class []int, trees int, cycles int, threshold float64, recursive bool, verbose bool) ([]int, map[int]int) {
 	//keep mapping of features
 	featMap := make(map[int]int, 0)
 	for i := 0; i < len(x[0]); i++ {
@@ -101,7 +101,7 @@ func Boruta(x [][]float64, class []int, trees int, cycles int, threshold float64
 			for _, v := range newFeatMap {
 				result = append(result, v)
 			}
-			return result
+			return result, tips
 		}
 		featMap = newFeatMap
 		if verbose {
