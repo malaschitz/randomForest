@@ -116,11 +116,11 @@ func Boruta(x [][]float64, class []int, trees int, cycles int, threshold float64
 }
 
 func bionimalThreshold(n int, threshold float64) int {
-	sum := 0
-	s := make([]int, n+1)
+	sum := 0.0
+	s := make([]float64, n+1)
 	bi := big.Int{}
 	for i := 0; i <= n; i++ {
-		bn := int(bi.Binomial(int64(n), int64(i)).Int64())
+		bn := float64(bi.Binomial(int64(n), int64(i)).Int64())
 		sum = sum + bn
 		s[i] = sum
 	}
