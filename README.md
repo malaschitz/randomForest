@@ -74,7 +74,10 @@ On picture are selected features (495 from 784) from images.
 
 ![boruta 05](boruta05.png)
 
-# Isolation 
+# Isolation Forest
+
+Isolation forest is an anomaly detection algorithm. 
+It detects anomalies using isolation (how far a data point is to the rest of the data), rather than modelling the normal points. 
 
 Two Isolation Forest methods are implemented. 
 The first is done as a statistic over the standard Random Forest. 
