@@ -74,5 +74,29 @@ On picture are selected features (495 from 784) from images.
 
 ![boruta 05](boruta05.png)
 
+# Isolation 
 
+Two Isolation Forest methods are implemented. 
+The first is done as a statistic over the standard Random Forest. 
+After the Random Forest is computed, per tree and per branch it calculates how deep each record is. 
+This is done over all trees, and the function returns the ranked statistics of the individual records. 
+I recommend increasing the MaxDepth value.
 
+```go
+	isolations, mean, stddev := forest.IsolationForest()
+	for i, d := range isolations {
+		fmt.Println(i, d, mean, stddev)
+	}
+```
+The second method is done by https://en.wikipedia.org/wiki/Isolation_forest. 
+It gives different results than the first one. 
+In the isolation2.go example, it is used in a way that each label is evaluated separately.  
+
+```go
+	forest := randomforest.IsolationForest{X: x}
+	forest.Train(TREES)
+```
+
+Result for MINST are on image.
+
+![isolation forest](isolationForest.jpg)

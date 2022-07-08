@@ -91,6 +91,23 @@ func (forest *Forest) Train(trees int) {
 	forest.FeatureImportance = imp
 }
 
+// Calculate outliers with Isolation Forest method
+func (forest *Forest) IsolationForest() (isolations []float64, mean float64, stddev float64) {
+	isolations = make([]float64, forest.NSize)
+	for i, x := range forest.Data.X {
+		for _, t := range forest.Trees {
+			isolations[i] += float64(t.Root.depth(x))
+		}
+	}
+	for i, is := range isolations {
+		isolations[i] = is / float64(forest.NTrees)
+	}
+	mean = stat.Mean(isolations, nil)
+	variance := stat.Variance(isolations, nil)
+	stddev = math.Sqrt(variance)
+	return
+}
+
 // AddDataRow add new data
 // data: new data row
 // class: result
@@ -372,6 +389,16 @@ func (branch *Branch) vote(x []float64) []float64 {
 		return branch.Branch1.vote(x)
 	}
 	return branch.Branch0.vote(x)
+}
+
+func (branch *Branch) depth(x []float64) int {
+	if branch.IsLeaf {
+		return branch.Depth
+	}
+	if x[branch.Attribute] > branch.Value {
+		return branch.Branch1.depth(x)
+	}
+	return branch.Branch0.depth(x)
 }
 
 func (branch *Branch) print() {
