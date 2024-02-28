@@ -16,7 +16,7 @@ var (
 	NumWorkers = runtime.NumCPU() // max number of concurrent goroutines during training
 )
 
-//Forest je base class for whole forest with database, properties of Forest and trees.
+// Forest je base class for whole forest with database, properties of Forest and trees.
 type Forest struct {
 	Data              ForestData // database for calculate trees
 	Trees             []Tree     // all generated trees
@@ -285,7 +285,9 @@ func (branch *Branch) build(forest *Forest, x [][]float64, class []int, depth in
 		branch.IsLeaf = true
 		branch.LeafValue = make([]float64, forest.Classes)
 		for i, r := range classCount {
-			branch.LeafValue[i] = float64(r) / float64(branch.Size)
+			if branch.Size > 0 {
+				branch.LeafValue[i] = float64(r) / float64(branch.Size)
+			}
 		}
 		return
 	}
@@ -437,7 +439,9 @@ func gini(data []int) float64 {
 	sumF := float64(sum)
 	g := 1.0
 	for _, a := range data {
-		g = g - (float64(a)/sumF)*(float64(a)/sumF)
+		if sumF != 0 {
+			g = g - (float64(a)/sumF)*(float64(a)/sumF)
+		}
 	}
 	return g
 }

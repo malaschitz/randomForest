@@ -97,7 +97,9 @@ func (branch *Branch) xbuild(forest *Forest, x [][]float64, class []int, depth i
 		branch.IsLeaf = true
 		branch.LeafValue = make([]float64, forest.Classes)
 		for i, r := range classCount {
-			branch.LeafValue[i] = float64(r) / float64(branch.Size)
+			if branch.Size > 0 {
+				branch.LeafValue[i] = float64(r) / float64(branch.Size)
+			}
 		}
 		return
 	}
