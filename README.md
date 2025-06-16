@@ -1,4 +1,4 @@
-GoDoc: https://godoc.org/github.com/blue-agency/randomForest
+GoDoc: https://godoc.org/github.com/malaschitz/randomForest
 
 Test:
 
