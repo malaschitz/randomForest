@@ -5,10 +5,10 @@ import (
 	"math/rand"
 	"testing"
 
-	"github.com/malaschitz/randomForest/tests/generator"
+	"github.com/blue-agency/randomForest/tests/generator"
 )
 
-//Example of generated dataset
+// Example of generated dataset
 func TestGenerator(t *testing.T) {
 	rand.Seed(1)
 	fmt.Println("-------")

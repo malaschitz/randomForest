@@ -4,19 +4,18 @@ import (
 	"fmt"
 	"math/rand"
 
-	randomforest "github.com/malaschitz/randomForest"
-	"github.com/malaschitz/randomForest/examples/img"
+	randomforest "github.com/blue-agency/randomForest"
+	"github.com/blue-agency/randomForest/examples/img"
 	"github.com/petar/GoMNIST"
 )
 
 /*
-	Using boruta for mnist
+Using boruta for mnist
 
-	With threshold 5% was selected 495 features from 784.
-	Result of random forest was the same - 96.2% as in minst.go
+With threshold 5% was selected 495 features from 784.
+Result of random forest was the same - 96.2% as in minst.go
 
-	With threshold 10% was selected 493 features from 784 with the same result.
-
+With threshold 10% was selected 493 features from 784 with the same result.
 */
 func main() {
 	size := 60000
@@ -108,7 +107,7 @@ func main() {
 	// Trees: 100 Results:  96.2%
 }
 
-//create samples from data
+// create samples from data
 func sample(x [][]float64, y []int, count int) (xx [][]float64, yy []int) {
 	xx = make([][]float64, count)
 	yy = make([]int, count)

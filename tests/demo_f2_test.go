@@ -5,12 +5,12 @@ import (
 	"math/rand"
 	"testing"
 
-	randomforest "github.com/malaschitz/randomForest"
-	"github.com/malaschitz/randomForest/tests/generator"
+	randomforest "github.com/blue-agency/randomForest"
+	"github.com/blue-agency/randomForest/tests/generator"
 )
 
 /*
-	Example of data when you need create more features. It is often far better method than DeepForest or NN.
+Example of data when you need create more features. It is often far better method than DeepForest or NN.
 */
 func TestForest2(t *testing.T) {
 	rand.Seed(1)

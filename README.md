@@ -1,12 +1,14 @@
-GoDoc: https://godoc.org/github.com/malaschitz/randomForest
+GoDoc: https://godoc.org/github.com/blue-agency/randomForest
 
-Test: 
+Test:
+
 ```go
-go test ./... -cover -coverpkg=.  
+go test ./... -cover -coverpkg=.
 ```
 
 # randomForest
-[Random Forest](https://en.wikipedia.org/wiki/Random_forest) implementation in golang. 
+
+[Random Forest](https://en.wikipedia.org/wiki/Random_forest) implementation in golang.
 
 ## Simple Random Forest
 
@@ -19,18 +21,18 @@ go test ./... -cover -coverpkg=.
 		xData = append(xData, x)
 		yData = append(yData, y)
 	}
-	forest := randomForest.Forest{}		
+	forest := randomForest.Forest{}
 	forest.Data = randomforest.ForestData{X: xData, Class: yData}
 	forest.Train(1000)
 	//test
-	fmt.Println("Vote", forest.Vote([]float64{0.1, 0.1, 0.1, 0.1})) 
+	fmt.Println("Vote", forest.Vote([]float64{0.1, 0.1, 0.1, 0.1}))
 	fmt.Println("Vote", forest.Vote([]float64{0.9, 0.9, 0.9, 0.9}))
 ```
 
 ## Extremely Randomized Trees
 
 ```go
-	forest.TrainX(1000)	
+	forest.TrainX(1000)
 ```
 
 ## Deep Forest
@@ -50,13 +52,13 @@ Continuos Random Forest for data where are still new and new data (forex, wheath
 forest := randomForest.Forest{}
 data := []float64{rand.Float64(), rand.Float64()}
 res := 1; //result
-forest.AddDataRow(data, res, 1000, 10, 2000) 
+forest.AddDataRow(data, res, 1000, 10, 2000)
 // AddDataRow : add new row, trim oldest row if there is more than 1000 rows, calculate a new 10 trees, but remove oldest trees if there is more than 2000 trees.
 ```
 
 # Boruta Algorithm for feature selection
 
-Boruta algorithm was developed as package for language R. 
+Boruta algorithm was developed as package for language R.
 It is one of most effective feature selection algorithm.
 There is [paper](https://www.jstatsoft.org/article/view/v036i11) in Journal of Statistical Software.
 
@@ -69,20 +71,20 @@ Boruta algorithm use random forest for selection important features.
 	// or randomforest.BorutaDefault(xData, yData, 100, 20, 0.05, true, true)
 ```
 
-In _/examples_ is example with [MNIST database](https://en.wikipedia.org/wiki/MNIST_database). 
-On picture are selected features (495 from 784) from images. 
+In _/examples_ is example with [MNIST database](https://en.wikipedia.org/wiki/MNIST_database).
+On picture are selected features (495 from 784) from images.
 
 ![boruta 05](boruta05.png)
 
 # Isolation Forest
 
-Isolation forest is an anomaly detection algorithm. 
+Isolation forest is an anomaly detection algorithm.
 It detects anomalies using isolation (how far a data point is to the rest of the data), rather than modelling the normal points. (wiki)
 
-Two Isolation Forest methods are implemented. 
-The first is done as a statistic over the standard Random Forest. 
-After the Random Forest is computed, per tree and per branch it calculates how deep each record is. 
-This is done over all trees, and the function returns the ranked statistics of the individual records. 
+Two Isolation Forest methods are implemented.
+The first is done as a statistic over the standard Random Forest.
+After the Random Forest is computed, per tree and per branch it calculates how deep each record is.
+This is done over all trees, and the function returns the ranked statistics of the individual records.
 I recommend increasing the MaxDepth value.
 
 ```go
@@ -91,9 +93,10 @@ I recommend increasing the MaxDepth value.
 		fmt.Println(i, d, mean, stddev)
 	}
 ```
-The second method is done by https://en.wikipedia.org/wiki/Isolation_forest. 
-It gives different results than the first one. 
-In the isolation2.go example, it is used in a way that each label is evaluated separately.  
+
+The second method is done by https://en.wikipedia.org/wiki/Isolation_forest.
+It gives different results than the first one.
+In the isolation2.go example, it is used in a way that each label is evaluated separately.
 
 ```go
 	forest := randomforest.IsolationForest{X: x}

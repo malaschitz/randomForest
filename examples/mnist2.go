@@ -4,12 +4,12 @@ import (
 	"fmt"
 	"math/rand"
 
-	randomforest "github.com/malaschitz/randomForest"
+	randomforest "github.com/blue-agency/randomForest"
 	"github.com/petar/GoMNIST"
 )
 
 /*
-	Train 1 forest for all labels.
+Train 1 forest for all labels.
 */
 func ExampleMNIST2() {
 	//read data

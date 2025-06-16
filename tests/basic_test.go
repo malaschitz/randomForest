@@ -4,7 +4,7 @@ import (
 	"math/rand"
 	"testing"
 
-	randomforest "github.com/malaschitz/randomForest"
+	randomforest "github.com/blue-agency/randomForest"
 )
 
 func TestSimple(t *testing.T) {

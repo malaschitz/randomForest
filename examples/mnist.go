@@ -9,13 +9,13 @@ import (
 	"fmt"
 	"math/rand"
 
-	randomforest "github.com/malaschitz/randomForest"
+	randomforest "github.com/blue-agency/randomForest"
 	"github.com/petar/GoMNIST"
 )
 
 /*
-	Train 10 forests. For every label own forest.
-	Results are not better as one forest with 10x trees.
+Train 10 forests. For every label own forest.
+Results are not better as one forest with 10x trees.
 */
 func ExampleMNIST() {
 	//read data

@@ -5,11 +5,11 @@ import (
 	"math/rand"
 	"testing"
 
-	randomforest "github.com/malaschitz/randomForest"
-	"github.com/malaschitz/randomForest/tests/generator"
+	randomforest "github.com/blue-agency/randomForest"
+	"github.com/blue-agency/randomForest/tests/generator"
 )
 
-//TestDemo simple Random Foresr exaple
+// TestDemo simple Random Foresr exaple
 func TestDemo(t *testing.T) {
 	rand.Seed(1)
 	n := 100

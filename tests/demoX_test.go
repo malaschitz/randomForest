@@ -5,8 +5,8 @@ import (
 	"math/rand"
 	"testing"
 
-	randomforest "github.com/malaschitz/randomForest"
-	"github.com/malaschitz/randomForest/tests/generator"
+	randomforest "github.com/blue-agency/randomForest"
+	"github.com/blue-agency/randomForest/tests/generator"
 )
 
 /*

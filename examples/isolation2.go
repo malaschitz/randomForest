@@ -5,7 +5,7 @@ import (
 	"math/rand"
 	"sort"
 
-	randomforest "github.com/malaschitz/randomForest"
+	randomforest "github.com/blue-agency/randomForest"
 	"github.com/petar/GoMNIST"
 )
 
